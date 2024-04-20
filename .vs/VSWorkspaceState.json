@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\app",
+    "\\app\\api",
+    "\\app\\database",
+    "\\app\\scripts",
+    "\\app\\templates",
+    "\\app\\visualization",
+    "\\scripts",
+    "\\scripts\\database"
+  ],
+  "SelectedNode": "\\app\\templates\\dashboard.html",
+  "PreviewInSolutionExplorer": false
+}

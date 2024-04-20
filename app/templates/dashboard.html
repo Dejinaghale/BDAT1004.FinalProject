@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chicago Crime Dashboard</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            fetchChartData('/api/top_10_crimes', 'topCrimesChart', 'Top 10 Crimes in Chicago');
+            fetchChartData('/api/arrests', 'arrestsChart', 'Arrests Information');
+            fetchChartData('/api/top_5_most_occurred_locations', 'mostOccurredLocationsChart', 'Top 5 Most Crime Occurred Locations');
+        }
+
+        function fetchChartData(url, chartId, title) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const chartData = new google.visualization.DataTable();
+                    chartData.addColumn('string', 'Data');
+                    chartData.addColumn('number', 'Count');
+                    chartData.addRows(data.map(entry => [entry._id.toString(), entry.count]));
+
+                    const options = {
+                        title: title,
+                        colors: ['#4285f4', '#34a853', '#fbbc05', '#ea4335', '#6f42c1'],
+                        width: '1200',
+                        height: 500,
+                        is3D: true,
+                        chartArea: { left: '15%', top: '15%', width: '70%', height: '70%' },
+                        hAxis: { title: 'Data', titleTextStyle: { color: '#333', fontSize: 14 }, slantedText: true, slantedTextAngle: 45, textStyle: { fontSize: 10 } },
+                        vAxis: { title: 'Count', titleTextStyle: { color: '#333', fontSize: 14 }, textStyle: { fontSize: 12 } },
+                        legend: { position: 'top', textStyle: { fontSize: 12 } }
+                    };
+
+                    const chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+                    chart.draw(chartData, options);
+                });
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard {
+            display: grid;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .chart-container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-title">
+        <h1>Chicago Crime Dashboard</h1>
+    </div>
+
+    <div class="dashboard">
+        <div class="chart-container">
+            <h2>Top 10 Crimes In Chicago</h2>
+            <div id="topCrimesChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h2>Arrests Information</h2>
+            <div id="arrestsChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h2>Top 5 Most Crime Occurred Locations</h2>
+            <div id="mostOccurredLocationsChart"></div>
+        </div>
+    </div>
+</body>
+</html>
